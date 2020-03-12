@@ -10,7 +10,7 @@
 
 #define COLS 850
 #define ROWS 680
-#define KERN_SIZE 5
+#define KERN_SIZE 3
 #define KERN_RAD (KERN_SIZE >> 1)
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
