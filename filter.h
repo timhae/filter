@@ -8,8 +8,8 @@
 #include <ctype.h>
 #include <algorithm>
 
-#define COLS 850
-#define ROWS 680
+#define COLS 512
+#define ROWS 512
 #define KERN_SIZE 3
 #define KERN_RAD (KERN_SIZE >> 1)
 

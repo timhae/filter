@@ -129,7 +129,7 @@ int main() {
    image2->matrix = new uint8_t[COLS*ROWS];
 
    // Read input
-   readPGM("img1.pgm", image1);
+   readPGM("in.pgm", image1);
 
    // Set image data
    image2->col = image1->col;
@@ -140,7 +140,7 @@ int main() {
    gauss_simple(image1->matrix, image2->matrix);
 
    // Store output
-   writePGM("img2.pgm", image2);
+   writePGM("out.pgm", image2);
 
    // Deallocate
    delete[] image1->matrix;
