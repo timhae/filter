@@ -2,15 +2,11 @@
 
 void gauss_simple(uint8_t video_in[ROWS * COLS],
                   uint8_t video_out[ROWS * COLS]) {
-#pragma HLS INTERFACE m_axi port = video_in bundle = gmem0
-#pragma HLS INTERFACE axis port = video_out bundle = out_stream
 
     int16_t kernel[KERN_SIZE][KERN_SIZE] = {{1, 2, 1}, {2, 4, 2}, {1, 2, 1}};
-#pragma HLS array_partition variable = kernel complete dim = 0
 
     for (int32_t y = 0; y < ROWS; y++) {
-        for (int32_t x = 0; x < COLS; x++) {
-#pragma HLS pipeline
+        pipeline:for (int32_t x = 0; x < COLS; x++) {
 
             int16_t sum = 0;
             for (int32_t i = -KERN_RAD; i <= KERN_RAD; i++) {
