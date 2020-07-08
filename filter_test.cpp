@@ -1,7 +1,7 @@
 #include "filter.h"
 
-#define HI(num) (((num) & 0x0000FF00) << 8)
-#define LO(num) ((num) & 0x000000FF)
+#define HI(num) (((num)&0x0000FF00) << 8)
+#define LO(num) ((num)&0x000000FF)
 
 /* pgm data structure */
 typedef struct _PGMData {
@@ -12,8 +12,7 @@ typedef struct _PGMData {
 } PGMData;
 
 /* to skip comments */
-void SkipComments(FILE *fp)
-{
+void SkipComments(FILE *fp) {
     int ch;
     char line[100];
     while ((ch = fgetc(fp)) != EOF && isspace(ch)) {
@@ -29,8 +28,7 @@ void SkipComments(FILE *fp)
 }
 
 /* for reading:*/
-PGMData* readPGM(const char *file_name, PGMData *data)
-{
+PGMData *readPGM(const char *file_name, PGMData *data) {
     FILE *pgmFile;
     char version[3];
     int i, j;
@@ -46,7 +44,6 @@ PGMData* readPGM(const char *file_name, PGMData *data)
         exit(EXIT_FAILURE);
     }
     SkipComments(pgmFile);
-    int dat = 0;
     fscanf(pgmFile, "%d", &(data->col));
     SkipComments(pgmFile);
     fscanf(pgmFile, "%d", &(data->row));
@@ -59,26 +56,24 @@ PGMData* readPGM(const char *file_name, PGMData *data)
             for (j = 0; j < data->col; ++j) {
                 hi = fgetc(pgmFile);
                 lo = fgetc(pgmFile);
-                data->matrix[i*(data->col) + j] = (hi << 8) + lo;
+                data->matrix[i * (data->col) + j] = (hi << 8) + lo;
             }
         }
     } else {
         for (i = 0; i < data->row; ++i) {
             for (j = 0; j < data->col; ++j) {
                 lo = fgetc(pgmFile);
-                data->matrix[i*(data->col) + j] = lo;
+                data->matrix[i * (data->col) + j] = lo;
             }
         }
     }
 
     fclose(pgmFile);
     return data;
-
 }
 
 /*for writing*/
-void writePGM(const char *filename, const PGMData *data)
-{
+void writePGM(const char *filename, const PGMData *data) {
     FILE *pgmFile;
     int i, j;
     int hi, lo;
@@ -96,17 +91,16 @@ void writePGM(const char *filename, const PGMData *data)
     if (data->max_gray > 255) {
         for (i = 0; i < data->row; ++i) {
             for (j = 0; j < data->col; ++j) {
-                hi = HI(data->matrix[i*(data->col) + j]);
-                lo = LO(data->matrix[i*(data->col) + j]);
+                hi = HI(data->matrix[i * (data->col) + j]);
+                lo = LO(data->matrix[i * (data->col) + j]);
                 fputc(hi, pgmFile);
                 fputc(lo, pgmFile);
             }
-
         }
     } else {
         for (i = 0; i < data->row; ++i) {
             for (j = 0; j < data->col; ++j) {
-                lo = LO(data->matrix[i*(data->col) + j]);
+                lo = LO(data->matrix[i * (data->col) + j]);
                 fputc(lo, pgmFile);
             }
         }
@@ -120,31 +114,31 @@ void writePGM(const char *filename, const PGMData *data)
 
 int main() {
 
-	// Create data structures
-   struct _PGMData *image1 = new _PGMData;
-   struct _PGMData *image2 = new _PGMData;
+    // Create data structures
+    struct _PGMData *image1 = new _PGMData;
+    struct _PGMData *image2 = new _PGMData;
 
-   // Allocate
-   image1->matrix = new uint8_t[COLS*ROWS];
-   image2->matrix = new uint8_t[COLS*ROWS];
+    // Allocate
+    image1->matrix = new uint8_t[COLS * ROWS];
+    image2->matrix = new uint8_t[COLS * ROWS];
 
-   // Read input
-   readPGM("in.pgm", image1);
+    // Read input
+    readPGM("in.pgm", image1);
 
-   // Set image data
-   image2->col = image1->col;
-   image2->row = image1->row;
-   image2->max_gray = image1->max_gray;
+    // Set image data
+    image2->col = image1->col;
+    image2->row = image1->row;
+    image2->max_gray = image1->max_gray;
 
-   // Compute filter
-   gauss_simple(image1->matrix, image2->matrix);
+    // Compute filter
+    gauss_simple(image1->matrix, image2->matrix);
 
-   // Store output
-   writePGM("out.pgm", image2);
+    // Store output
+    writePGM("out.pgm", image2);
 
-   // Deallocate
-   delete[] image1->matrix;
-   delete[] image2->matrix;
+    // Deallocate
+    delete[] image1->matrix;
+    delete[] image2->matrix;
 
-   return 0;
+    return 0;
 }

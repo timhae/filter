@@ -1,12 +1,12 @@
 #ifndef __FILTER_H__
 #define __FILTER_H__
 
+#include <algorithm>
+#include <ctype.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
-#include <ctype.h>
-#include <algorithm>
 
 #define COLS 512
 #define ROWS 512
@@ -16,6 +16,7 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-void gauss_simple (uint8_t video_in[ROWS*COLS], uint8_t video_out[ROWS*COLS]);
+void gauss_simple(uint8_t video_in[ROWS * COLS],
+                  uint8_t video_out[ROWS * COLS]);
 
 #endif
