@@ -2,29 +2,21 @@
 
 void gauss_simple(uint8_t video_in[ROWS * COLS],
                   uint8_t video_out[ROWS * COLS]) {
-#pragma HLS INTERFACE axis port = video_in bundle = in_stream
-#pragma HLS INTERFACE axis port = video_out bundle = out_stream
 
     uint16_t kernel[KERN_SIZE][KERN_SIZE] = {{1, 2, 1}, {2, 4, 2}, {1, 2, 1}};
     uint8_t line_buf[KERN_SIZE - 1][COLS] = {{0}};
     uint8_t right_side[KERN_SIZE] = {0};
     uint8_t window[KERN_SIZE][KERN_SIZE] = {{0}};
-#pragma HLS array_partition variable = kernel complete dim = 0
-#pragma HLS array_partition variable = line_buf complete dim = 1
-#pragma HLS array_partition variable = right_side complete
-#pragma HLS array_partition variable = window complete dim = 0
 
     uint32_t counter_stream = 0;
 
     // Read first image rows into line buffer
-    for (int x = COLS - KERN_RAD - 1; x < COLS; x++) {
-#pragma HLS pipeline
+    pipe1:for (int x = COLS - KERN_RAD - 1; x < COLS; x++) {
         line_buf[KERN_RAD - 1][x] = video_in[counter_stream];
         counter_stream++;
     }
     for (int y = KERN_RAD; y < KERN_SIZE - 1; ++y) {
-        for (int x = 0; x < COLS; ++x) {
-#pragma HLS pipeline
+        pipe2:for (int x = 0; x < COLS; ++x) {
             line_buf[y][x] = video_in[counter_stream];
             counter_stream++;
         }
@@ -32,16 +24,14 @@ void gauss_simple(uint8_t video_in[ROWS * COLS],
 
     // Populate window
     for (int y = KERN_RAD; y < KERN_SIZE; ++y) {
-        for (int x = KERN_RAD; x < KERN_SIZE; ++x) {
-#pragma HLS pipeline
+        pipe3:for (int x = KERN_RAD; x < KERN_SIZE; ++x) {
             window[y][x] = line_buf[y - 1][x + COLS - KERN_SIZE];
         }
     }
 
     // Iterate over all image pixels
     for (int y = 0; y < ROWS; ++y) {
-        for (int x = 0; x < COLS; ++x) {
-#pragma HLS pipeline
+        pipe4:for (int x = 0; x < COLS; ++x) {
 
             // Calculate resulting pixel
             uint16_t sum = 0;
