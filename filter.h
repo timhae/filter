@@ -16,8 +16,6 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-void sobel_simple(uint8_t video_in[ROWS * COLS],
-                  uint8_t video_out[ROWS * COLS]);
 void gauss_simple(uint8_t video_in[ROWS * COLS],
                   uint8_t video_out[ROWS * COLS]);
 
